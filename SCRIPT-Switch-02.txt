@@ -1,0 +1,38 @@
+enable
+configure terminal
+hostname SW-02
+banner motd "SOMENTE PESSOAL AUTORIZADO"
+enable secret SenhadaEnable
+service password-encryption
+ip domain-name Rede2.Local
+crypto key generate rsa general-key modulus 1024
+username administrador privilege 15 secret SenhaAdmin
+username estagiario privilege 1 secret SenhaEst
+line console 0
+password SenhadaConsole
+login
+exit
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 5
+exit
+ip default-gateway 10.40.16.1
+interface gigabitEthernet 0/1
+ip address 10.40.16.1 255.255.240.0
+description Gateway
+no shutdown
+exit
+interface vlan 1
+ip address 10.40.17.254 255.255.240.0
+description INTERFACE DE GERENCIAMENTO
+exit
+interface fastEthernet 0/1
+ip address 10.40.16.5 255.255.240.0
+description Servidor
+exit
+interface fastEthernet 0/2
+ip address 10.40.16.10 255.255.240.0
+description Host
+exit
+do wr
